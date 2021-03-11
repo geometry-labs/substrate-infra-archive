@@ -1,0 +1,28 @@
+action_: create
+deployment_dir_action_: default
+use_assume_role: false
+
+stack: api
+namespace: polkadot
+network_name: kusama
+environment: prod
+deployment_id: 2
+provider: aws
+aws_region: eu-north-1
+
+deployment_name: polkadot-aws-prod-2
+
+key_type_: path
+private_key_path: /tmp/test-ssh-key
+public_key_path: /tmp/test-ssh-key.pub
+
+create_network: false
+
+k8s_action_: run
+cluster_name: polkadot-prod-eu-north-1
+
+
+aws_instance_family_: i3
+aws_available_instances_:
+instance_type: i3.large
+num_instances: 3

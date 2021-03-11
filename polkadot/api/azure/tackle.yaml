@@ -1,0 +1,72 @@
+---
+
+version_:
+  type: yaml
+  path: versions.yaml
+
+azure_regions_options_:
+  type: azure_regions
+  when: "{{ providers == 'azure' }}"
+
+azure_regions_:
+  type: checkbox
+  message: Which Azure regions?
+  choices: "{{ azure_regions_options_ }}"
+  when: "{{ providers == 'azure' }}"
+
+region:
+  type: var
+  input: "{{ azure_region }}"
+
+cluster_name:
+  type: input
+  message: What do you want to call your cluster?
+  default: "{{namespace}}-{{environment}}-{{region}}"
+
+# Network
+network_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-azure-network
+  checkout: "{{ version_[environment]['network'] }}"
+  existing_context: "{{ this }}"
+
+# K8s cluster
+k8s-cluster:
+  type: tackle
+  merge: true
+  chdir: k8s-cluster
+  existing_context: "{{ this }}"
+
+# Autoscaling Group
+asg:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-azure-asg
+  checkout: "{{ version_[environment]['asg'] }}"
+  existing_context: "{{ this }}"
+
+# K8s Config
+k8s-config:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-k8s-config
+  checkout: "{{ version_[environment]['k8s-config'] }}"
+  existing_context: "{{ this }}"
+
+# Write Deployment
+write_:
+  type: tackle
+  context_file: "{{ scripts_dir_ }}/write.yaml"
+  existing_context: "{{ this }}"
+
+# Apply
+apply_confirm_:
+  type: confirm
+  message: Do you want deploy now?
+
+apply_:
+  type: tackle
+  context_file: "{{ scripts_dir_ }}/apply.yaml"
+  when: "{{ apply_confirm_ }}"
+  existing_context: "{{ this }}"

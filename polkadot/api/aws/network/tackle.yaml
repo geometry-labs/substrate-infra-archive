@@ -1,0 +1,21 @@
+# Network
+create_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-aws-network
+  checkout: "{{ version_[environment]['network'] }}"
+  when: "{{ create_network }}"
+
+network:
+  type: block
+  merge: true
+  when: "{{ not create_network }}"
+  items:
+    vpc_id:
+      type: var
+      input: vpc-
+    asg_security_groups:
+      type: var
+      input: ["sg-XX"]
+    asg_subnet_ids:
+    

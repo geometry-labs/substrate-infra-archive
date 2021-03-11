@@ -1,0 +1,19 @@
+dev:
+  network: master
+  node: master
+  telemetry: master
+
+test:
+  network: master
+  node: master
+  telemetry: master
+
+stage:
+  network: master
+  node: master
+  telemetry: master
+
+prod:
+  network: master
+  node: master
+  telemetry: master

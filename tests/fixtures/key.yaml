@@ -1,0 +1,22 @@
+
+key_type_: keygen
+private_key_path: /tmp/test-ssh-key
+use_assume_role: false
+
+action_: create
+deployment_dir_action_: default
+stack: api
+namespace: polkadot
+network_name: kusama
+environment: prod
+deployment_id: 2
+provider: aws
+aws_region: eu-north-1
+deployment_name: polkadot-aws-prod-2
+create_network: false
+k8s_action_: run
+cluster_name: polkadot-prod-eu-north-1
+aws_instance_family_: i3
+aws_available_instances_:
+instance_type: i3.large
+num_instances: 1

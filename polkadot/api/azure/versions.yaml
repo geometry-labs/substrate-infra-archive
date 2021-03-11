@@ -1,0 +1,23 @@
+dev:
+  asg: master
+  k8s-cluster: master
+  k8s-config: master
+  network: master
+
+test:
+  asg: master
+  k8s-cluster: master
+  k8s-config: master
+  network: master
+
+stage:
+  asg: master
+  k8s-cluster: master
+  k8s-config: master
+  network: master
+
+prod:
+  asg: master
+  k8s-cluster: master
+  k8s-config: master
+  network: master

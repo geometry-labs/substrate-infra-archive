@@ -1,0 +1,67 @@
+---
+
+network_params_:
+  type: block
+  when: "{{ not create_network }}"
+  merge: true
+  items:
+    k8s_vpc_id:
+      type: var
+      input: vpc-X
+    k8s_subnets:
+      type: var
+      input: sub-X
+    k8s_security_group_id:
+      type: var
+      input: sg-X
+    k8s_worker_additional_security_group_ids:
+      type: var
+      input: ["sg-x"]
+
+cluster_name:
+  type: input
+  message: What do you want to call your cluster?
+  default: "{{namespace}}-{{environment}}-{{region}}"
+
+print_:
+  type: print
+  statement: Configuring Polkadot AWS Kubernetes Cluster
+
+cluster_version:
+  type: var
+  input: 1.17
+
+cluster_autoscale:
+  type: confirm
+  message: Do you want to enable cluster autoscaling?
+
+cluster_autoscale_max_workers:
+  type: input
+  message: What do you want the maximum number of workers to be?
+  when: "{{ cluster_autoscale }}"
+  default: 10
+
+cluster_autoscale_min_workers:
+  type: input
+  message: What do you want the minimum number of workers to be?
+  when: "{{ cluster_autoscale }}"
+  default: 3
+
+num_workers:
+  type: input
+  message: What do you want to set the initial number of workers to be?
+  when: "{{ cluster_autoscale }}"
+  default: 3
+
+aws_available_instances_:
+  type: aws_ec2_types
+  region: "{{ region }}"
+  instance_families:
+    - c5
+    - m5
+
+worker_instance_type:
+  type: select
+  when:
+  message: What type of worker instances do you want to create?
+  choices: "{{ aws_available_instances_ }}"

@@ -1,0 +1,66 @@
+---
+
+version_:
+  type: yaml
+  path: versions.yaml
+
+aws_regions_options_:
+  type: aws_regions
+
+aws_region:
+  type: select
+  message: Which AWS region do you want to deploy into?
+  choices: "{{ aws_regions_options_ }}"
+
+region:
+  type: var
+  input: "{{ aws_region }}"
+
+# Network
+create_network:
+  type: select
+  message: Do you want to create a new network or connect to an existing one?
+  choices:
+    - true: Create a new network
+    - false: Connect to existing one
+
+create_network_:
+  type: tackle
+  merge: true
+  chdir: network
+  when: "{{ create_network }}"
+
+network_modules_:
+  type: var
+  input:
+    - network
+  when: "{{ create_network }}"
+  else: []
+
+
+# Telemetry
+telemetry_enable_:
+  type: select
+  message: Do you want to set up a telemetry server or do you have an existing one?
+  choices:
+    - true: Create new telemetry server
+    - false: Existing telemetry server
+
+telemetry_create_:
+  type: tackle
+  merge: true
+  when: "{{ telemetry_enable_ }}"
+  chdir: telemetry
+
+telemetry_modules_:
+  type: var
+  input:
+    - telemetry
+  when: "{{ telemetry_enable_ }}"
+  else: []
+
+# Validator node
+node_:
+  type: tackle
+  chdir: node
+  merge: true

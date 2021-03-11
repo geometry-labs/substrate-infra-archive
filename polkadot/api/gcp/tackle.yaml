@@ -1,0 +1,94 @@
+---
+
+version_:
+  type: yaml
+  path: versions.yaml
+
+project_choice_:
+  type: select
+  message: Have you created a GCP project yet?
+  choices:
+    - true: "Yes I have"
+    - false: "No, tell me how"
+
+docs_:
+  type: webbrowser
+  url: https://www.notion.so/insightx/GCP-API-Keys-Tutorial-f4a265539a6b47eeb5a6fc01a0ba3a77
+  when: "{{ not project_choice_ }}"
+
+project:
+  type: input
+  message: "Please enter the project name you want to deploy into >>"
+
+gcp_regions_options_:
+  type: gcp_regions
+  gcp_project: "{{ project }}"
+
+region:
+  type: select
+  message: Which GCP region?
+  choices: "{{ gcp_regions_options_ }}"
+
+cluster_name:
+  type: input
+  message: What do you want to call your cluster?
+  default: "{{namespace}}-{{environment}}-{{region}}"
+
+available_azs_:
+  type: gcp_azs
+  region: "{{ region }}"
+  gcp_project: "{{ project }}"
+
+azs:
+  type: checkbox
+  message: "What availability zones do you want to deploy in {{ region }}?"
+  choices: "{{ available_azs_ }}"
+
+# Network
+network_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-gcp-network
+  checkout: "{{ version_[environment]['network'] }}"
+  existing_context: "{{ this }}"
+
+# K8s cluster
+k8s_cluster_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-gcp-k8s-cluster
+  checkout: "{{ version_[environment]['k8s-cluster'] }}"
+  existing_context: "{{ this }}"
+
+# Autoscaling Group
+asg_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-gcp-asg
+  checkout: "{{ version_[environment]['asg'] }}"
+  existing_context: "{{ this }}"
+
+# K8s Config
+k8s_config_:
+  type: tackle
+  merge: true
+  template: https://github.com/insight-w3f/terraform-polkadot-k8s-config
+  checkout: "{{ version_[environment]['k8s-config'] }}"
+  existing_context: "{{ this }}"
+
+# Write Deployment
+write_:
+  type: tackle
+  context_file: "{{ scripts_dir_ }}/write.yaml"
+  existing_context: "{{ this }}"
+
+# Apply
+apply_confirm_:
+  type: confirm
+  message: Do you want deploy now?
+
+apply_:
+  type: tackle
+  context_file: "{{ scripts_dir_ }}/apply.yaml"
+  when: "{{ apply_confirm_ }}"
+  existing_context: "{{ this }}"

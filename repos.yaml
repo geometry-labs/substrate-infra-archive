@@ -1,0 +1,77 @@
+repos:
+  type: meta_repo
+  git_org: insight-w3f
+  repo_tree:
+    modules:
+      k8s:
+        k8s-elk: geometry-infra/terraform-k8s-elk
+        k8s-base: geometry-infra/terraform-k8s-base-config
+        k8s-api: geometry-infra/terraform-polkadot-k8s-api-ingress
+      ansible:
+        base: ansible-role-polkadot-base
+        health-check: ansible-role-polkadot-health-check
+        library: ansible-role-polkadot-library
+        truth: ansible-role-polkadot-truth
+        telemetry: ansible-role-polkadot-telemetry
+        validator: ansible-role-polkadot-validator
+        
+    polkadot:
+      api:
+        aws:
+          network:
+            source:
+              network: terraform-polkadot-aws-network
+          asg:
+            source:
+              asg: terraform-polkadot-aws-asg
+              api-lb: terraform-polkadot-aws-api-lb
+              truth-node: terraform-polkadot-aws-truth-node
+
+          k8s-cluster:
+            source:
+            
+
+        azure:
+          network:
+            source:
+              network: terraform-polkadot-azure-network
+          asg:
+            source:
+              asg: terraform-polkadot-azure-asg
+              api-lb: terraform-polkadot-azure-api-lb
+              truth-node: terraform-polkadot-azure-truth-node
+          k8s-cluster:
+            source:
+              k8s-cluster: terraform-polkadot-azure-k8s-cluster
+        do:
+          network:
+            source:
+              network: terraform-polkadot-do-network
+          k8s-cluster:
+            source:
+              k8s-cluster: terraform-polkadot-do-k8s-cluster
+        gcp:
+          network:
+            source:
+              network: terraform-polkadot-gcp-network
+          asg:
+            source:
+              asg: terraform-polkadot-gcp-asg
+              api-lb: terraform-polkadot-gcp-api-lb
+              truth-node: terraform-polkadot-gcp-truth-node
+          k8s-cluster:
+            source:
+              k8s-cluster: terraform-polkadot-gcp-k8s-cluster
+      validator:
+        aws:
+          network:
+            source:
+              network: terraform-polkadot-aws-network
+          node:
+            source:
+              ansible: ansible-role-polkadot-validator
+              node: terraform-polkadot-aws-node
+          telemetry:
+            source:
+              node: terraform-polkadot-aws-telemetry
+              ansible: ansible-role-substrate-telemetry

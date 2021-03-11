@@ -1,0 +1,24 @@
+---
+
+# Providers
+provider:
+  type: var
+  input: aws
+
+#provider:
+#  type: select
+#  message: What cloud providers do you want to deploy on?
+#  choices:
+#    - aws: AWS
+#    - azure: Azure
+#    - do: DigitalOcean
+#    - gcp: GCP
+
+provider_call_:
+  type: tackle
+  chdir: "{{ provider }}"
+  merge: true
+
+modules:
+  type: var
+  input: "{{ network_modules_ + telemetry_modules_ + ['node'] }}"

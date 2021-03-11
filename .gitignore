@@ -1,0 +1,42 @@
+.idea
+.vscode/
+
+# Ignore sub-repos - to clone: `tackle . --context-file repos.yaml`
+# Shared repos
+modules/
+# Repos used in terragrunt `source` field.
+source/
+
+# Terraform and terragrunt
+*.tfstate/
+*.tfstate.backup
+*.tfplan
+.terragrunt-cache/
+.terraform/
+.terraform.lock.hcl
+
+.bak
+scratch*
+
+# Keys created in tests
+tests/test-ssh-key*
+
+#
+# Configs
+#
+run.yml
+
+.circleci/.configs
+ansible_inventory.tpl
+
+deployments/*
+!/**/.gitkeep
+
+# Python
+env/
+venv/
+*.pyc
+
+# Other
+id_rsa_test*
+

@@ -1,0 +1,24 @@
+---
+
+print_:
+  type: print
+  statement: Configuring Polkadot AWS Auto-Scaling Group
+  
+  
+domain_name: example.com
+
+network_params_:
+  type: block
+  when: "{{ not create_network }}"
+  merge: true
+  items:
+    telemetry_vpc_id:
+      type: var
+      input: vpc-X
+    telemetry_subnet_ids:
+      type: var
+      input: ["sub-X"]
+    telemetry_security_groups:
+      type: var
+      input: ["sg-x"]
+

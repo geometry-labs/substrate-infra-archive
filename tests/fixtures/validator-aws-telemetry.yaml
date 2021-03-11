@@ -1,0 +1,29 @@
+action_: create
+deployment_dir_action_: default
+use_assume_role: false
+
+stack: validator
+namespace: polkadot
+network_name: kusama
+environment: prod
+deployment_id: 3
+provider: aws
+aws_region: eu-north-1
+
+#deployment_dir: ~/.deployments
+deployment_name: polkadot-aws-prod-validator-3
+
+key_type_: path
+private_key_path: /tmp/test-ssh-key
+public_key_path: /tmp/test-ssh-key.pub
+
+create_network: true
+
+aws_instance_family_: m5d
+validator_instance_type: m5d.large
+telemetry_instance_type: m5d.large
+
+telemetry_enable_: true
+domain_name: example.com
+
+

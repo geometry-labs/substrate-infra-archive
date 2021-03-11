@@ -1,0 +1,5 @@
+# Network
+validator_enabled:
+  type: var
+  input: true
+

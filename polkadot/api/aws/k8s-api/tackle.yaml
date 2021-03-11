@@ -1,0 +1,37 @@
+print_:
+  type: print
+  statement: Configuring Polkadot Kubernetes Cluster
+  
+deployment_domain_name:
+  type: var
+  when: "{{ not create_network }}"
+  input: "example.com"
+
+tf_basic_variables_:
+  type: terraform_variables
+  variables_file: variables.tf
+  merge: true
+  var_list:
+    - consul_enabled
+    - elasticsearch_enabled
+    - prometheus_enabled
+    - nginx_ingress_enabled
+    - external_dns_enabled
+    - cert_manager_enabled
+
+tf_prom_variables_:
+  type: terraform_variables
+  variables_file: variables.tf
+  when: "{{ prometheus_enabled }}"
+  merge: true
+  var_list:
+    - prometheus_user
+    - prometheus_password
+
+tf_cert_variables_:
+  type: terraform_variables
+  when: "{{ cert_manager_enabled }}"
+  variables_file: variables.tf
+  merge: true
+  var_list:
+    - user_email

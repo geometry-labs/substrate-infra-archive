@@ -1,0 +1,58 @@
+action_: create
+deployment_dir_action_: default
+use_assume_role: false
+
+stack: api
+namespace: polkadot
+network_name: kusama
+environment: prod
+deployment_id: 4
+provider: aws
+aws_region: eu-north-1
+
+#deployment_dir: ~/.deployments
+deployment_name: polkadot-aws-prod-4
+
+key_type_: path
+private_key_path: /tmp/test-ssh-key
+public_key_path: /tmp/test-ssh-key.pub
+
+# Network
+create_network: true
+# Prompts
+dns_type_: no_dns
+vars_confirm_: false
+
+azs:
+  - eu-north-1a
+  - eu-north-1b
+  - eu-north-1c
+api_enable: true
+consul_enable: true
+k8s_enable: true
+monitoring_enable: true
+
+# k8s-cluster
+k8s_action_: create
+cluster_autoscale: true
+cluster_autoscale_max_workers: 3
+cluster_autoscale_min_workers: 1
+num_workers: 3
+worker_instance_type: t2.large
+
+# k8s-config
+choose_defaults_: true
+
+cluster_name: polkadot-prod-eu-north-3
+
+# ASG
+aws_instance_family_: i3
+aws_available_instances_:
+instance_type: i3.large
+num_instances: 3
+
+versions:
+  network: master
+  k8s-cluster: master
+  asg: master
+  k8s-config: fix-helm-repo

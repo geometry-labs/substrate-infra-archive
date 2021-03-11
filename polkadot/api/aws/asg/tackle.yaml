@@ -1,0 +1,65 @@
+---
+
+print_:
+  type: print
+  statement: Configuring Polkadot AWS Auto-Scaling Group
+
+network_params_:
+  type: block
+  when: "{{ not create_network }}"
+  merge: true
+  items:
+    asg_vpc_id:
+      type: var
+      input: vpc-X
+    asg_subnet_ids:
+      type: var
+      input: ["sub-X"]
+    asg_security_groups:
+      type: var
+      input: ["sg-x"]
+
+k8s_params_:
+  type: block
+  when: "{{ not create_k8s }}"
+  merge: true
+  items:
+    cluster_id:
+      type: var
+      input: mycluster
+
+#meta:
+#  type: block
+#  when: "{{ instance_type is not defined }}"
+#  merge: true
+#  items:
+
+aws_instance_family_:
+  type: select
+  message: What instance family do you want to run?
+  choices:
+    - i3
+    - i3en
+    - c5d
+
+aws_available_instances_:
+  type: aws_ec2_types
+  region: "{{ region }}"
+  instance_families: ["{{ aws_instance_family_ }}"]
+
+instance_type:
+  type: select
+  message: What type of data instances do you want to create?
+  choices: "{{ aws_available_instances_ }}"
+
+num_instances:
+  type: input
+  message: Number of instances to create >>
+  default: 3
+
+#tf_variables_:
+#  type: terraform_variables
+#  variables_file: variables.tf
+#  merge: true
+#  var_list:
+#    -

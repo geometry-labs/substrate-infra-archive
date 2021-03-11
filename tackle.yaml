@@ -1,0 +1,108 @@
+---
+
+# Install Dependencies
+settings_:
+  type: tackle
+  context_file: scripts/settings.yaml
+  merge: true
+
+# Action
+action_:
+  type: select
+  message: What we trying to do now?
+  choices:
+#    - install: Install dependencies
+    - list: List deployments
+    - create: Create new deployment
+    - plan: Plan a deployment
+    - apply: Apply deployment
+    - destroy: Destroy deployment
+
+# Install Dependencies
+#installs_:
+#  type: tackle
+#  context_file: scripts/installs.yaml
+#  when: "{{ 'install' == action_ }}"
+
+# List Deployments
+list_:
+  type: table
+  column_names:
+    - Namespace
+    - Network Name
+    - Environment
+    - Provider
+    - Region
+    - Stack
+    - Deployment ID
+  contents: "{{ deployments_list_ }}"
+  when: "{{ 'list' == action_ or 'deploy' == action_ }}"
+
+# Create Deployment
+create_:
+  type: tackle
+  chdir: polkadot
+  when: "{{ 'create' == action_ }}"
+
+# Plan / Apply / Destroy
+tf_actions_:
+  type: block
+  when: "{{ action_ in ['plan', 'apply', 'destroy'] }}"
+  items:
+
+    deployment_choice_:
+      type: select
+      message: Which deployment would you like to {{ action_ }}?
+      choices: "{{ deployment_list_ }}"
+      
+    deployment_path:
+      type: path_join
+      paths:
+        - "{{ deployment_dir }}"
+        - "{{ deployment_choice_ }}"
+
+    symlink_:
+      type: symlink
+      src: "{{ deployment_path }}"
+      dst: run.yml
+      overwrite: true
+
+    chmod_:
+      type: chmod
+      path: "{{ deployment_path }}"
+      mode: 0o644
+
+    deployment_read_:
+      type: yaml
+      path: "{{ deployment_path }}"
+    
+    stack:
+      type: var
+      input: "{{ deployment_read_['stack'] }}"
+
+    provider:
+      type: var
+      input: "{{ deployment_read_['provider'] }}"
+
+    modules:
+      type: var
+      input: "{{ deployment_read_['modules'] }}"
+
+#    d:
+#      type: debug
+
+    plan_action_:
+      type: shell
+      chdir: "polkadot/{{ stack }}/{{ provider }}/{{ item }}"
+      loop: "{{ modules }}"
+      command: "terragrunt plan --terragrunt-non-interactive --terragrunt-source-update"
+      when: "{{ action_ == 'plan' }}"
+
+    run_action_:
+      type: shell
+      chdir: "polkadot/{{ stack }}/{{ provider }}/{{ item }}"
+      loop: "{{ modules }}"
+      reverse: "{{ action_ == 'destroy' }}"
+      ignore_error: "{{ action_ == 'destroy' }}"
+      command: "terragrunt {{ action_ }} --terragrunt-non-interactive --terragrunt-source-update --auto-approve"
+      when: "{{ action_ in ['apply', 'destroy'] }}"
