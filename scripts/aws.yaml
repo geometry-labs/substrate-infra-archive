@@ -1,0 +1,25 @@
+
+use_assume_role:
+  type: select
+  message: |
+    Do you want to use an assumed role?
+    Only for multi-account deployments.
+  choices:
+    - False
+    - True
+    
+account_id_:
+  type: input
+  message: Account ID >
+  when: "{{ use_assume_role }}"
+  
+role_name_:
+  type: input
+  message: Role name >
+  default: Administrator
+  when: "{{ use_assume_role }}"
+
+role_arn:
+  type: var
+  input: "arn:aws:iam::{{account_id_}}:role/{{role_name_}}"
+  when: "{{ use_assume_role }}"

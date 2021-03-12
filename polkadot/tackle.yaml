@@ -1,0 +1,108 @@
+# Stack
+stack:
+  type: select
+  message: What type of stack do you want to run?
+  choices:
+    - api: API clusters
+    - validator: Advanced validator
+    - validator-simple: Super simple validator
+
+# Namespace
+namespace:
+  type: input
+  message: What do you want to call your namespace?
+  default: polkadot
+
+# TODO: Fix this for API nodes
+# Network Name
+network_name:
+  type: select
+  message: What network do you want to run on?
+  choices:
+    - kusama: Kusama
+    - mainnet: Mainnet
+
+## Environment
+#environment:
+#  type: select
+#  message: What type of environment do you want to create?
+#  when: "{{ stack != 'validator-simple'}}"
+#  choices:
+#    - prod
+#    - test
+#    - stage
+#    - dev
+#  else: prod
+
+# Default to prod releases unless otherwise specified
+environment:
+  type: var
+  input: prod
+
+# Deployment ID
+deployment_id:
+  type: input
+  message: What deployment id do you want to make?
+  when: "{{ stack != 'validator-simple'}}"
+  default: 1
+
+# Get SSH details
+ssh_keys_call_:
+  type: tackle
+  context_file: ssh.yaml
+  chdir: "{{ scripts_dir_ }}"
+  merge: true
+
+# Call the stack
+stack_call_:
+  type: tackle
+  chdir: "{{ stack }}"
+  merge: true
+
+# AWS ONLY - Determine IAM settings
+aws_call_:
+  type: tackle
+  when: "{{ provider == 'aws' }}"
+  context_file: aws.yaml
+  chdir: "{{ scripts_dir_ }}"
+  merge: true
+
+# Finalize creation
+deployment_name:
+  type: input
+  message: What would you like to call your deployment?
+  default: "{{ namespace }}-{{ stack }}-{{ provider }}-{{ environment }}-{{ deployment_id }}"
+
+versions_read_:
+  type: yaml
+  path: "{{ stack }}/{{ provider }}/versions.yaml"
+
+versions:
+  type: var
+  input: "{{ versions_read_[environment] }}"
+
+print_:
+  type: print
+  statement: "Creating deployment at {{ deployment_dir }}/{{ deployment_name }}.yaml"
+  
+existing_deployment_:
+  type: path_exists
+  path: "{{ deployment_dir }}/{{ deployment_name }}.yaml"
+  
+existing_deployment_replace_:
+  type: select
+  message: "Do you want to replace the existing deployment file {{ deployment_dir }}/{{ deployment_name }}.yaml?"
+  when: "{{ existing_deployment_ }}"
+  choices:
+    - true: Replace it
+    - false: Don't replace it / exit
+  else: true
+
+write_deployment_:
+  type: yaml
+  when: "{{ existing_deployment_replace_ }}"
+  path: "{{ deployment_dir }}/{{ deployment_name }}.yaml"
+  contents: "{{ this }}"
+  remove:
+    - ^_
+    - _$

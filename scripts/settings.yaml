@@ -1,0 +1,67 @@
+---
+# Settings that are consistent across the project
+# Checkout https://github.com/geometry-labs/tackle-box for DSL syntax
+
+repo:
+  type: var
+  input: "https://github.com/insight-w3f/terragrunt-polkadot"
+
+_environments:
+  - dev
+  - test
+  - stage
+  - prod
+
+base_dir_:
+  type: var
+  input: "{{ cwd }}"
+
+scripts_dir_:
+  type: find_in_parent
+  target: scripts
+
+deployments_dir_:
+  type: tackle
+  merge: true
+  context_file: "{{ scripts_dir_ }}/deployment_directory.yaml"
+
+deployment_list_:
+  type: listdir
+  path: "{{ deployment_dir }}"
+  ignore_hidden_files: true
+
+deployment_list_map_:
+  type: yaml
+  path: "{{ deployment_dir }}/{{ item }}"
+  loop: "{{ deployment_list_ }}"
+
+deployments_list_:
+  type: var
+  loop: "{{ deployment_list_map_ }}"
+  input:
+    - "{{ item['namespace'] }}"
+    - "{{ item['network_name'] }}"
+    - "{{ item['environment'] }}"
+    - "{{ item['provider'] }}"
+    - "{{ item['region'] }}"
+    - "{{ item['stack'] }}"
+    - "{{ item['deployment_id'] }}"
+  when: "{{ deployment_list_map_ | length > 0 }}"
+  else: []
+
+settings_:
+  type: yaml
+  path: settings.yml
+
+# Always called from root
+base_directory_:
+  type: var
+  input: "{{ cwd }}"
+  
+run_file_:
+  type: var
+  input: "{{ cwd }}/run.yml"
+
+clear_cache_:
+  type: command
+  command: make clear-cache

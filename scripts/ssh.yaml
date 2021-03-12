@@ -1,0 +1,45 @@
+---
+# Script to set set ssh keys
+# Checkout https://github.com/geometry-labs/tackle-box for DSL syntax
+
+ssh_intro_:
+  type: print
+  statement: Configuring SSH keys
+
+key_type_:
+  type: select
+  message: How would you like to set ssh keys?
+  choices:
+    - path: Enter path to existing keys
+    - keygen: Create new keys with ssh-keygen
+
+path_:
+  type: block
+  when: "{{ key_type_ == 'path' }}"
+  merge: true
+  items:
+    private_key_path:
+      type: input
+      message: What path is your private ssh key?
+      default: "~/.ssh/"
+    public_key_path:
+      type: input
+      message: What path is your public ssh key?
+      default: "{{ private_key_path }}.pub"
+
+keygen_:
+  type: block
+  when: "{{ key_type_ == 'keygen' }}"
+  merge: true
+  items:
+    private_key_path:
+      type: input
+      message: What path to generate the ssh key?
+      default: "~/.ssh/id_rsa"
+    gen_key_:
+      type: command
+      command: |
+        ssh-keygen -t rsa -b 4096 -f {{ private_key_path }}
+    public_key_path:
+      type: var
+      input: "{{ private_key_path }}.pub"

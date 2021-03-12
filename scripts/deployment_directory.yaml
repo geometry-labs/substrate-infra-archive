@@ -1,0 +1,67 @@
+---
+# Script that is called from the <stack>/<provider> tackle.yaml
+# Checkout https://github.com/geometry-labs/tackle-box for DSL syntax
+
+environ_:
+  type: block
+  merge: true
+  when: "{{ deployment_dir is not defined }}"
+  items:
+    deployment_dir_environ_:
+      type: env_var
+      input: POLKADOT_DEPLOYMENT_DIR
+      fallback: None
+
+    # If env var exists, use that, otherwise prompt
+    deployment_dir:
+      type: var
+      input: "{{deployment_dir_environ_}}"
+      when: "{{ deployment_dir_environ_ != 'None' }}"
+
+path_:
+  type: block
+  merge: true
+  when: "{{ deployment_dir is not defined }}"
+  items:
+    deployment_dir_action_:
+      type: select
+      message: Where do you want to put your deployment file?
+      choices:
+        - default: In the `~/.deployment` directory
+        - create: |
+            Put deployments in another location.
+            Should set POLKADOT_DEPLOYMENT_DIR environment variable for future runs.
+
+    default_deployment_dir_:
+      type: path_join
+      paths:
+        - "{{ home_dir }}"
+        - .deployments
+
+    default_deployment_dir_exists_:
+      type: path_exists
+      path: "{{ default_deployment_dir_ }}"
+  
+    default_deployment_dir_create_:
+      type: mkdir
+      path: "{{ default_deployment_dir_ }}"
+      when:
+        - "{{ not default_deployment_dir_exists_ }}"
+        - "{{ deployment_dir_action_ == 'default' }}"
+    
+    # Deal with creation case then fallback to default directory
+    deployment_dir:
+      type: input
+      when: "{{ deployment_dir_action_ == 'create' }}"
+      message: Where do you want to put the deployment?
+      default: "{{ default_deployment_dir_ }}"
+
+    deployment_dir_create_:
+      type: mkdir
+      when: "{{ deployment_dir_action_ == 'create' }}"
+      path: "{{ deployment_dir }}"
+
+deployment_dir:
+  type: var
+  input: "{{ default_deployment_dir_ }}"
+  when: "{{ deployment_dir is not defined }}"
