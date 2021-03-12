@@ -1,12 +1,12 @@
 repos:
   type: meta_repo
-  git_org: insight-w3f
+  git_org: geometry-labs
   repo_tree:
     modules:
       k8s:
-        k8s-elk: geometry-infra/terraform-k8s-elk
-        k8s-base: geometry-infra/terraform-k8s-base-config
-        k8s-api: geometry-infra/terraform-polkadot-k8s-api-ingress
+        k8s-elk: terraform-k8s-elk
+        k8s-base: terraform-k8s-base-config
+        k8s-api: terraform-polkadot-k8s-api-ingress
       ansible:
         base: ansible-role-polkadot-base
         health-check: ansible-role-polkadot-health-check
@@ -29,39 +29,40 @@ repos:
 
           k8s-cluster:
             source:
+              cluster: terraform-aws-eks-cluster
             
-
-        azure:
-          network:
-            source:
-              network: terraform-polkadot-azure-network
-          asg:
-            source:
-              asg: terraform-polkadot-azure-asg
-              api-lb: terraform-polkadot-azure-api-lb
-              truth-node: terraform-polkadot-azure-truth-node
-          k8s-cluster:
-            source:
-              k8s-cluster: terraform-polkadot-azure-k8s-cluster
-        do:
-          network:
-            source:
-              network: terraform-polkadot-do-network
-          k8s-cluster:
-            source:
-              k8s-cluster: terraform-polkadot-do-k8s-cluster
-        gcp:
-          network:
-            source:
-              network: terraform-polkadot-gcp-network
-          asg:
-            source:
-              asg: terraform-polkadot-gcp-asg
-              api-lb: terraform-polkadot-gcp-api-lb
-              truth-node: terraform-polkadot-gcp-truth-node
-          k8s-cluster:
-            source:
-              k8s-cluster: terraform-polkadot-gcp-k8s-cluster
+#        azure:
+#          network:
+#            source:
+#              network: terraform-polkadot-azure-network
+#
+#          asg:
+#            source:
+#              asg: terraform-polkadot-azure-asg
+#              api-lb: terraform-polkadot-azure-api-lb
+#              truth-node: terraform-polkadot-azure-truth-node
+#          k8s-cluster:
+#            source:
+#              k8s-cluster: terraform-polkadot-azure-k8s-cluster
+#        do:
+#          network:
+#            source:
+#              network: terraform-polkadot-do-network
+#          k8s-cluster:
+#            source:
+#              k8s-cluster: terraform-polkadot-do-k8s-cluster
+#        gcp:
+#          network:
+#            source:
+#              network: terraform-polkadot-gcp-network
+#          asg:
+#            source:
+#              asg: terraform-polkadot-gcp-asg
+#              api-lb: terraform-polkadot-gcp-api-lb
+#              truth-node: terraform-polkadot-gcp-truth-node
+#          k8s-cluster:
+#            source:
+#              k8s-cluster: terraform-polkadot-gcp-k8s-cluster
       validator:
         aws:
           network:
