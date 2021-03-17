@@ -45,14 +45,41 @@ cluster_autoscale_min_workers:
   type: input
   message: What do you want the minimum number of workers to be?
   when: "{{ cluster_autoscale }}"
-  default: 3
+  default: 1
 
 num_workers:
   type: input
   message: What do you want to set the initial number of workers to be?
-  when: "{{ cluster_autoscale }}"
-  default: 3
+  when: "{{ not cluster_autoscale }}"
+  default: 2
 
+use_spot_instances:
+  type: confirm
+  message: Do you want to use spot instances as well as on-demand?
+
+spot_autoscale:
+  type: confirm
+  message: Do you want to auto scale spot instances?
+  when: "{{ use_spot_instances }}"
+
+spot_cluster_max_workers:
+  type: input
+  message: What do you want the maximum number of spot workers to be?
+  when: "{{ use_spot_instances and spot_autoscale}}"
+  default: 5
+
+spot_cluster_min_workers:
+  type: input
+  message: What do you want the minimum number of spot workers to be?
+  when: "{{ use_spot_instances and spot_autoscale}}"
+  default: 1
+
+spot_num_workers:
+  type: input
+  message: What do you want to set the initial number of spot workers to be?
+  when: "{{ use_spot_instances and not spot_autoscale}}"
+  default: 2
+  
 aws_available_instances_:
   type: aws_ec2_types
   region: "{{ region }}"

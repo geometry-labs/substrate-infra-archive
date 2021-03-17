@@ -2,7 +2,7 @@
 create_:
   type: tackle
   merge: true
-  template: https://github.com/insight-w3f/terraform-polkadot-aws-network
+  template: https://github.com/geometry-labs/terraform-polkadot-aws-network
   checkout: "{{ version_[environment]['network'] }}"
   when: "{{ create_network }}"
 

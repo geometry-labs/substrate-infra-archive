@@ -51,22 +51,13 @@ dependency "network" {
 }
 
 inputs = {
-  cluster_id = dependency.cluster.outputs.cluster_id
-  cloud_platform = local.vars.provider
-  lb_endpoint = dependency.asg.outputs.dns_name
-  aws_worker_arn = dependency.cluster.outputs.worker_iam_role_arn
-  deployment_domain_name = local.vars.create_network ? dependency.network.outputs.public_regional_domain : local.vars.deployment_domain_name
-  kubeconfig = base64encode(dependency.cluster.outputs.kubeconfig)
+  load_balancer_endpoint = dependency.asg.outputs.dns_name
 }
 
 generate "provider" {
   path = "kubernetes.tf"
   if_exists = "overwrite"
   contents =<<-EOF
-data "aws_eks_cluster_auth" "this" {
-  name = "${dependency.cluster.outputs.cluster_id}"
-}
-
 provider "aws" {
   region = "${local.vars.region}"
   skip_get_ec2_platforms     = true
@@ -75,13 +66,16 @@ provider "aws" {
   skip_requesting_account_id = true
 }
 
+data "aws_eks_cluster_auth" "this" {
+  name = "${dependency.cluster.outputs.cluster_id}"
+}
+
 provider "helm" {
   version = "=1.1.1"
   kubernetes {
     host                   = "${dependency.cluster.outputs.cluster_endpoint}"
     cluster_ca_certificate = base64decode("${dependency.cluster.outputs.cluster_certificate_authority_data}")
     token                  = data.aws_eks_cluster_auth.this.token
-    load_config_file       = false
   }
 }
 
@@ -89,7 +83,6 @@ provider "kubernetes" {
     host                   = "${dependency.cluster.outputs.cluster_endpoint}"
     cluster_ca_certificate = base64decode("${dependency.cluster.outputs.cluster_certificate_authority_data}")
     token                  = data.aws_eks_cluster_auth.this.token
-//    load_config_file       = false
 }
 EOF
 }

@@ -27,7 +27,7 @@ path_:
       type: select
       message: Where do you want to put your deployment file?
       choices:
-        - default: In the `~/.deployment` directory
+        - default: In the `~/.deployments` directory
         - create: |
             Put deployments in another location.
             Should set POLKADOT_DEPLOYMENT_DIR environment variable for future runs.

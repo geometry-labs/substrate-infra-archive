@@ -40,6 +40,8 @@ cluster_autoscale_min_workers: 1
 num_workers: 3
 worker_instance_type: t2.large
 
+use_spot_instances: false
+
 # k8s-config
 choose_defaults_: true
 
@@ -51,8 +53,8 @@ aws_available_instances_:
 instance_type: i3.large
 num_instances: 3
 
-versions:
-  network: master
-  k8s-cluster: master
-  asg: master
-  k8s-config: fix-helm-repo
+#versions:
+#  network: master
+#  k8s-cluster: master
+#  asg: master
+#  k8s-config: fix-helm-repo

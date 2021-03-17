@@ -14,6 +14,7 @@ repos:
         truth: ansible-role-polkadot-truth
         telemetry: ansible-role-polkadot-telemetry
         validator: ansible-role-polkadot-validator
+        cloud-helper: ansible-role-cloud-helper
         
     polkadot:
       api:
@@ -30,7 +31,13 @@ repos:
           k8s-cluster:
             source:
               cluster: terraform-aws-eks-cluster
-            
+
+          k8s-base:
+            source: terraform-k8s-base-config
+
+          k8s-api:
+            source: terraform-polkadot-k8s-api-ingress
+  
 #        azure:
 #          network:
 #            source:

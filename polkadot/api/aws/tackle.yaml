@@ -68,14 +68,21 @@ k8s_modules_:
   input:
     - k8s-cluster
     - k8s-base
+    - k8s-api
   when: "{{ create_k8s }}"
   else: []
 
-# K8s Config
-k8s_config_:
+# K8s Base
+k8s_base_:
   type: tackle
-  template: https://github.com/insight-w3f/terraform-polkadot-k8s-config
-  checkout: "{{ version_[environment]['k8s-config'] }}"
+  chdir: k8s-base
+  merge: true
+  when: "{{ create_k8s }}"
+
+# K8s API
+k8s_api_:
+  type: tackle
+  chdir: k8s-api
   merge: true
   when: "{{ create_k8s }}"
 

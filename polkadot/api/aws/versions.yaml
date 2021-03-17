@@ -1,23 +1,27 @@
 dev:
-  network: master
-  k8s-cluster: master
-  asg: master
-  k8s-config: master
+  asg: main
+  k8s-cluster: main
+  k8s-base: main
+  k8s-api: main
+  network: main
 
 test:
-  asg: master
-  k8s-cluster: master
-  k8s-config: master
-  network: master
+  asg: main
+  k8s-cluster: main
+  k8s-base: main
+  k8s-api: main
+  network: main
 
 stage:
-  asg: master
-  k8s-cluster: master
-  k8s-config: master
-  network: master
+  asg: main
+  k8s-cluster: main
+  k8s-base: main
+  k8s-api: main
+  network: main
 
 prod:
-  asg: master
-  k8s-cluster: master
-  k8s-config: master
-  network: master
+  asg: main
+  k8s-cluster: main
+  k8s-base: main
+  k8s-api: main
+  network: main

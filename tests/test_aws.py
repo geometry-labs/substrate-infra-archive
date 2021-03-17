@@ -1,4 +1,5 @@
 from tackle.main import tackle
+from tackle.exceptions import HookCallException
 import os
 from . import get_deployment_action
 

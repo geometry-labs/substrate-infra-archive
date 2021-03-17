@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/insight-w3f/terraform-polkadot-k8s-config.git?ref=${local.vars.versions.k8s-config}"
+  source = "github.com/geometry-labs/terraform-polkadot-k8s-config.git?ref=${local.vars.versions.k8s-config}"
 
   before_hook "update_kubeconfig" {
     commands     = ["apply", "destroy"]
@@ -83,14 +83,25 @@ provider "helm" {
     cluster_ca_certificate = base64decode("${dependency.cluster.outputs.cluster_certificate_authority_data}")
     token                  = data.aws_eks_cluster_auth.this.token
     load_config_file       = false
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1alpha1"
+      args        = ["eks", "get-token", "--cluster-name", "${local.cluster_name}"]
+      command     = "aws"
+    }
   }
 }
 
 provider "kubernetes" {
-    host                   = "${dependency.cluster.outputs.cluster_endpoint}"
-    cluster_ca_certificate = base64decode("${dependency.cluster.outputs.cluster_certificate_authority_data}")
-    token                  = data.aws_eks_cluster_auth.this.token
-//    load_config_file       = false
+  host                   = "${dependency.cluster.outputs.cluster_endpoint}"
+  cluster_ca_certificate = base64decode("${dependency.cluster.outputs.cluster_certificate_authority_data}")
+  token                  = data.aws_eks_cluster_auth.this.token
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1alpha1"
+    args        = ["eks", "get-token", "--cluster-name", "${local.cluster_name}"]
+    command     = "aws"
+  }
 }
 EOF
 }

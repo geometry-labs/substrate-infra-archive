@@ -1,5 +1,5 @@
 terraform {
-  source = "github.com/insight-w3f/terraform-polkadot-aws-network.git?ref=${local.vars.versions.network}"
+  source = "github.com/geometry-labs/terraform-polkadot-aws-network.git?ref=${local.vars.versions.network}"
 //  source = "."
 }
 
