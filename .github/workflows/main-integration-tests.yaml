@@ -1,0 +1,21 @@
+name: Integration tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+      
+      - name: Run a Terraform init
+        uses: docker://geometrylabs/main-builder:latest
+        with:
+          entrypoint: terragrunt
+          args: init
+          
