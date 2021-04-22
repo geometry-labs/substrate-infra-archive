@@ -17,8 +17,8 @@ remote_state_path_label_order:
   - deployment_id
 
 dns_order:
-  - region
   - provider
+  - region
   - network_name
   - namespace
 

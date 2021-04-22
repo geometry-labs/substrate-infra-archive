@@ -27,11 +27,11 @@ dependency "network" {
 }
 
 inputs = {
+  project = local.vars.name
   node_purpose = "validator"
   security_groups = local.vars.create_network ? [
     dependency.network.outputs.validator_security_group_id,
   ] : local.vars.validator_security_groups
   subnet_ids = local.vars.create_network ? dependency.network.outputs.public_subnets : local.vars.validator_subnet_ids
   vpc_id = local.vars.create_network ? dependency.network.outputs.vpc_id : local.vars.validator_vpc_id
-  project = local.vars.name
 }

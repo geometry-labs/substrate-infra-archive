@@ -27,6 +27,7 @@ dependency "network" {
 }
 
 inputs = {
+  node_purpose = "validator"
   security_groups = local.vars.create_network ? [
     dependency.network.outputs.validator_security_group_id,
   ] : local.vars.validator_security_groups

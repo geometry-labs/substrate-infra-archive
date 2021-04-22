@@ -73,13 +73,11 @@ repos:
       validator:
         aws:
           network:
-            source:
-              network: terraform-polkadot-aws-network
+            source: terraform-polkadot-aws-network
           node:
             source:
               ansible: ansible-role-polkadot-validator
               node: terraform-polkadot-aws-node
           telemetry:
             source:
-              node: terraform-polkadot-aws-telemetry
               ansible: ansible-role-substrate-telemetry
