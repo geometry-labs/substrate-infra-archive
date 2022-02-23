@@ -1,5 +1,14 @@
 # terragrunt-polkadot
 
+> Note to users - This tool has been made public but is no longer maintained and should not be considered usable. The CLI tooling for this repo is based on an early alpha version of [tackle-box](https://github.com/robcxyz/tackle-box) which has since made major changes in its syntax. These changes were partly realized during the development of this tool and thus this repo was never made public. Further, the underlying terraform repositories have undergone major changes so if any work is to proceed in this direction,the plan would be to add new the new version of tackle-box to those terraform modules to make a simplified deployment tool. 
+
+New modules:
+
+- Node (validator, library, source of truth) - [github.com/geometry-labs/terraform-polkadot-aws-node](https://github.com/geometry-labs/terraform-polkadot-aws-node)
+- Autoscaling group (only for API nodes ) - [github.com/geometry-labs/terraform-polkadot-aws-asg](https://github.com/geometry-labs/terraform-polkadot-aws-asg)
+
+---
+
 This is a reference architecture for deploying API nodes for Polkadot. Users can deploy infrastructure on one of
  several supported clouds and can customize the network topology per their needs. This work was done per the
  [Load Balanced Endpoints](https://github.com/w3f/Web3-collaboration/pull/250) grant proposal and is intended to be a
